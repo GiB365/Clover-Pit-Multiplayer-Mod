@@ -6,7 +6,7 @@
 ## To-do
 - [x] Networking API
 - [x] Lobby hosting + joining
-- [ ] Command console with arguments
+- [x] Command console with arguments
 - [ ] Lobby options
   - [ ] 1v1 deadlines every **x** deadlines
   - [ ] Max player count
