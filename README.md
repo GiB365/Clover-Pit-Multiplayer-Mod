@@ -10,7 +10,7 @@
 - [ ] RPC implementation
 - [ ] Lobby options
   - [ ] 1v1 deadlines every **x** deadlines
-  - [ ] Max player count
+  - [x] Max player count
   - [x] Port number
 - [ ] 1v1 deadlines
 - [ ] Sync seed
