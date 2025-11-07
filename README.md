@@ -11,7 +11,7 @@
 - [ ] Lobby options
   - [ ] 1v1 deadlines every **x** deadlines
   - [ ] Max player count
-  - [ ] Port number
+  - [x] Port number
 - [ ] 1v1 deadlines
 - [ ] Sync seed
 - [ ] Disable acheivements
