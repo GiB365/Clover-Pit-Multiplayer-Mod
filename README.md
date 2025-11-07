@@ -4,8 +4,9 @@
 - None... :(
 
 ## To-do
-- [ ] Networking API
-- [ ] Lobby hosting + joining
+- [x] Networking API
+- [x] Lobby hosting + joining
+- [x] Command console with arguments
 - [ ] Lobby options
   - [ ] 1v1 deadlines every **x** deadlines
   - [ ] Max player count
