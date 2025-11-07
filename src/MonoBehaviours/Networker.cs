@@ -1,6 +1,10 @@
 using UnityEngine;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using UnityEngine.DedicatedServer;
+using HarmonyLib;
+using System.Linq;
+using System;
 
 namespace CloverPit_MultiplayerMod.MonoBehaviours;
 
@@ -31,11 +35,24 @@ public class Networker : MonoBehaviour
         server = new(serverListener);
     }
 
-    public void Host(int port = 7777)
+    public void Host(string[] args)
     {
+        if (args == null)
+        {
+            args = ["7777"];
+        }
+
+        if (args.Length > 1)
+        {
+            ConsolePrompt.Log("Usage: host [port]");
+            return;
+        }
+
+        int port = int.Parse(args[0]);
+
         server.Start(port);
 
-        Plugin.Logger.LogDebug("Hosting server on port " + port.ToString());
+        ConsolePrompt.Log($"Hosting server on port {port}");
 
         serverListener.ConnectionRequestEvent += request =>
         {
@@ -47,7 +64,7 @@ public class Networker : MonoBehaviour
         
         serverListener.PeerConnectedEvent += peer =>
         {
-            Plugin.Logger.LogDebug("We got connection: " + peer);  // Show peer IP
+            ConsolePrompt.Log($"We got connection: {peer}");
 
             NetDataWriter writer = new();
 
@@ -55,26 +72,65 @@ public class Networker : MonoBehaviour
             peer.Send(writer, DeliveryMethod.ReliableOrdered);
         };
 
-        Join("127.0.0.1", port);
+        Join(["127.0.0.1", port.ToString()]);
     }
 
-    public void Join(string ip, int port, string password = "")
+    public void Join(string[] args)
     {
+        string ip, password;
+        int port;
+
+        if (args.Length == 0)
+        {
+            args = ["127.0.0.1", "7777", ""];
+        }
+        else if (args.Length < 2)
+        {
+            args = [args[0], "7777", ""];
+        }
+        else if (args.Length < 3)
+        {
+            args = [args[0], args[1], ""];
+        }
+        else
+        {
+            ConsolePrompt.Log("Usage: join [ip] [port] [password]");
+            return;
+        }
+
+        ip = args[0];
+        port = int.Parse(args[1]);
+        password = args[2];
+
+        ConsolePrompt.Log($"Trying to connect to {ip}:{port} with password: {password}");
+        
         client.Start();
         client.Connect(ip, port, password);
 
         clientListener.NetworkReceiveEvent += (fromPeer, dataReader, delivetyMethod, channel) =>
         {
-            Plugin.Logger.LogDebug("Recieved packet from peer Id: " + fromPeer.Id.ToString());
-            Plugin.Logger.LogDebug("Packet info: " + dataReader.GetString(100));
+            ConsolePrompt.Log($"Recieved packet from peer Id: {fromPeer.Id}");
+            ConsolePrompt.Log($"Packet info: {dataReader.GetString(100)}");
 
             dataReader.Recycle();
         };
     }
-    
-    public void Leave()
+
+    public void Leave(string[] args)
     {
+        if (args.Length != 0)
+        {
+            ConsolePrompt.Log("Usage: leave");
+            return;
+        }
+
         client.Stop();
         server.Stop();
+    }
+    
+    private void Update()
+    {
+        client?.PollEvents();
+        server?.PollEvents();
     }
 }
