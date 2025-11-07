@@ -1,12 +1,13 @@
 # Clover-Pit-Multiplayer-Mod
 
 ## Features
-- None... :(
+- Hosting and Joining Servers... but they do nothing :(
 
 ## To-do
 - [x] Networking API
 - [x] Lobby hosting + joining
-- [x] Command console with arguments
+- [x] Use CommandPromptWithArgs
+- [ ] RPC implementation
 - [ ] Lobby options
   - [ ] 1v1 deadlines every **x** deadlines
   - [ ] Max player count
